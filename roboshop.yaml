@@ -7,8 +7,8 @@
     image_id: ami-0220d79f3f480ecf5
     domain_name: dcinema.online
     action: 
-    - create
-    - delete
+     - create
+     - delete
 
   tasks:
   - name: create ec2 instances
