@@ -58,27 +58,27 @@
     when: item.item == "frontend"
 
 
-  # delete the route53 records
-  - name: delete route 53 records
-    amazon.aws.route53:
-     state: absent
-     record: "{{ items }}.{{ domain_name }}" # to delete all private ips
-     ttl: 1
-     type: A
-     zone: "{{ domain_name }}"
-    loop: "{{ instances }}" 
-    when: action == "delete"
+  # # delete the route53 records
+  # - name: delete route 53 records
+  #   amazon.aws.route53:
+  #    state: absent
+  #    record: "{{ items }}.{{ domain_name }}" # to delete all private ips
+  #    ttl: 1
+  #    type: A
+  #    zone: "{{ domain_name }}"
+  #   loop: "{{ instances }}" 
+  #   when: action == "delete"
 
-  # delete the route53 records for frontend
-  - name: delete route 53 records
-    amazon.aws.route53:
-     state: absent
-     record: "{{ domain_name }}" # to delete frontend which is publicip
-     ttl: 1
-     type: A
-     zone: "{{ domain_name }}"
-    loop: "{{ instances }}" 
-    when: 
-    - action == "delete"
-    - item == "frontend"
+  # # delete the route53 records for frontend
+  # - name: delete route 53 records
+  #   amazon.aws.route53:
+  #    state: absent
+  #    record: "{{ domain_name }}" # to delete frontend which is publicip
+  #    ttl: 1
+  #    type: A
+  #    zone: "{{ domain_name }}"
+  #   loop: "{{ instances }}" 
+  #   when: 
+  #   - action == "delete"
+  #   - item == "frontend"
 
