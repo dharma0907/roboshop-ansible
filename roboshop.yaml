@@ -19,8 +19,13 @@
     loop: "{{ instances }}"
     register: ec2_output
   
-  - name: print the output
-    debug:
-      msg: "{{ ec2_output }}"
+  # - name: print the output
+  #   debug:
+  #     msg: "{{ ec2_output }}"
 
+  - name: create route 53 record
+    debug:
+      msg: "Instance name: {{  item.item }} and Private IP: {{ item.instances[0].private_ip_address }}"
+    loop: "{{ ec2_output.results }}"
+     
     
