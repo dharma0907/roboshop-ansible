@@ -33,7 +33,7 @@
   #     msg: "Instance name: {{  item.item }} and Private IP: {{ item.instances[0].private_ip_address }}"
   #   loop: "{{ ec2_output.results }}"
   # here we are creating A record for all the instance using loop and private ip address
-  - name: create route 53 record for all instances
+  - name: create route 53 record
     amazon.aws.route53:
       state: present
       zone: "{{ domain_name }}"
