@@ -5,6 +5,7 @@
   vars:
     instances: [ "mongo", "redis", "mysql", "rabbitmq" ]
     image_id: ami-0220d79f3f480ecf5
+    domian_name: dcinema.online
 
   tasks:
   - name: create ec2 instances
@@ -23,9 +24,29 @@
   #   debug:
   #     msg: "{{ ec2_output }}"
 
+  # - name: create route 53 record
+  #   debug:
+  #     msg: "Instance name: {{  item.item }} and Private IP: {{ item.instances[0].private_ip_address }}"
+  #   loop: "{{ ec2_output.results }}"
+  # here we are creating A record for all the instance using loop and private ip address
   - name: create route 53 record
-    debug:
-      msg: "Instance name: {{  item.item }} and Private IP: {{ item.instances[0].private_ip_address }}"
+    amazon.aws.route53:
+      state: present
+      zone: {{ domian_name }}
+      record: "{{ item.item }}.{{ domian_name }}" #mongo.dcimea.online
+      type: A
+      ttl: 1
+      value: "{{ item.instances[0].private_ip_address }}"
     loop: "{{ ec2_output.results }}"
-     
-    
+    when: item.item != "frontend"
+  
+  - name: create route 53 record for frontend
+    amazon.aws.route53:
+      state: present
+      zone: {{ domian_name }}
+      record: "{{ domian_name }}" #mongo.dcimea.online
+      type: A
+      ttl: 1
+      value: "{{ item.instances[0].public_ip_address }}"
+    loop: "{{ ec2_output.results }}"
+    when: item.item == "frontend"
