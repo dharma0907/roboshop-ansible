@@ -5,7 +5,7 @@
   vars:
     instances: [ "mongo", "redis", "mysql", "rabbitmq" ]
     image_id: ami-0220d79f3f480ecf5
-    domian_name: dcinema.online
+    domain_name: dcinema.online
 
   tasks:
   - name: create ec2 instances
@@ -32,8 +32,8 @@
   - name: create route 53 record
     amazon.aws.route53:
       state: present
-      zone: {{ domian_name }}
-      record: "{{ item.item }}.{{ domian_name }}" #mongo.dcimea.online
+      zone: "{{ domain_name }}"
+      record: "{{ item.item }}.{{ domain_name }}" #mongo.dcimea.online
       type: A
       ttl: 1
       value: "{{ item.instances[0].private_ip_address }}"
@@ -43,8 +43,8 @@
   - name: create route 53 record for frontend
     amazon.aws.route53:
       state: present
-      zone: {{ domian_name }}
-      record: "{{ domian_name }}" #mongo.dcimea.online
+      zone: "{{ domain_name }}"
+      record: "{{ domain_name }}" #dcimea.online
       type: A
       ttl: 1
       value: "{{ item.instances[0].public_ip_address }}"
