@@ -14,8 +14,8 @@
       image_id: "{{ image_id }}"
       # security groups, we have multiple to add
       security_groups: 
-        - "roboshop-common"
-        - "roboshop-{{ item }}"
+      - "roboshop-common"
+      - "roboshop-{{ item }}"
     loop: "{{ instances }}"
     register: ec2_output
   
