@@ -69,7 +69,9 @@
       ttl: 1
       type: A
     loop: "{{ instances  }}"  
-    when: action == "delete"
+    when: 
+    - action == "delete"
+    - item.item != "frontend"
 
   # delete the route53 records for frontend
   - name: delete route 53 records
