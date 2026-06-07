@@ -22,7 +22,7 @@
       - "roboshop-{{ item }}"
     loop: "{{ instances }}"
     register: ec2_output
-    when: action == 'create'
+    when: action == "create"
   
   # - name: print the output
   #   debug:
@@ -62,11 +62,11 @@
   - name: delete route 53 records
     amazon.aws.route53:
      state: absent
-     record: "{{ item.instances[0].private_ip_address }}" # to delete all private ips
+     record: "{{ items }}.{{ domain_name }}" # to delete all private ips
      ttl: 1
      type: A
      zone: "{{ domain_name }}"
-    loop: "{{ ec2_ouput.results }}" 
+    loop: "{{ instances }}" 
     when: action == "delete"
 
   # delete the route53 records for frontend
@@ -77,7 +77,7 @@
      ttl: 1
      type: A
      zone: "{{ domain_name }}"
-    loop: "{{ ec2_ouput.results }}" 
+    loop: "{{ instances }}" 
     when: 
     - action == "delete"
     - item == "frontend"
