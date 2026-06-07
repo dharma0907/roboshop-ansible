@@ -64,7 +64,7 @@
   - name: delete route 53 records
     amazon.aws.route53:
      state: absent
-     record: "{{ items }}.{{ domain_name }}" # to delete all private ips
+     record: "{{ item }}.{{ domain_name }}" # to delete all private ips
      ttl: 1
      type: A
      zone: "{{ domain_name }}"
@@ -84,3 +84,10 @@
     - action == "delete"
     - item == "frontend"
 
+  - name: delete ec2 instances
+    amazon.aws.ec2_instance:
+      state: absent
+      name: "roboshop-{{ item }}"
+      wait: false
+    loop: "{{ instances  }}"  
+    when: action == "delete"
