@@ -1,5 +1,5 @@
 - name: Configuring mongodb server
-  hosts: mongodb
+  hosts: mongo
   become: true
   tasks:
   - name: Copy mongo repo
@@ -25,4 +25,3 @@
      regexp: '127.0.0.1'
      replace: '0.0.0.0'
     register: mongo_conf
-    
