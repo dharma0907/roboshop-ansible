@@ -31,7 +31,7 @@
 
   - name: Creaye a directory if doen't exists
     ansible.builtin.file:
-      path: /tmp
+      path: /app
       state: directory
   
   - name: Download catalogue
