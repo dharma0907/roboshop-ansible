@@ -85,8 +85,9 @@
 
   - name: Restart service cron on centos, in all cases, also issue daemon-reload to pick up config changes
     ansible.builtin.systemd_service:
+     name: catalogue
      #state: restarted
-     daemon_reload: true  
+     daemon_reload: true
     when: unit_file.change
 
   - name: start and enable catalongue
