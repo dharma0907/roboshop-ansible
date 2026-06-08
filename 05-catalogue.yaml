@@ -65,7 +65,7 @@
       state: present
   # load user data
   - name: check catalogue schema exist or not
-    shell:  mongosh --host "{{ MONGODB_HOST }}" --eval 'db.getMongo().getDBNames().indexOf("catalogue")'
+    shell:  mongosh --host "{{ MONGO_HOST }}" --eval 'db.getMongo().getDBNames().indexOf("catalogue")'
     register: catalogue_output
     tags: 
     - mongo  
@@ -77,7 +77,7 @@
     - mongo
     # to run this particular task we are using tags, use -t mongo at the end of command
   - name: Load products
-    shell: mongosh --host {{ MONGODB_HOST }} </app/db/master-data.js
+    shell: mongosh --host {{ MONGO_HOST }} </app/db/master-data.js
     when: catalongue_output.stdout < 0
     tags:
     - mongo
