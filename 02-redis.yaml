@@ -1,0 +1,28 @@
+- name: Redis server setup
+  hosts: redis
+  become: true
+  tasks:
+  - name: enable redis7
+    command: dnf module enable redis:7 -y
+
+  - name: Replace Update listen address from 127.0.0.1 to 0.0.0.0 in /etc/redis/redis.conf
+    replace:
+     path: /etc/redis/redis.conf
+     regexp: '127.0.0.1'
+     replace: '0.0.0.0'
+
+  - name: change protected mode
+    ansible.builtin.lineinfile:
+     path: etc/redis/redis.conf
+     regexp: 'protected-mode'
+     line: 'protected-mode no'
+  
+  - name: Install redis
+    command: dnf install redis -y 
+  
+  - name: start the service
+    service:
+     name: redis
+     state: started
+     enabled: true
+    
