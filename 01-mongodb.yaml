@@ -12,6 +12,13 @@
      name: mongodb-org
      state: present
 
+  - name: Update  IP address
+    ansible.builtin.replace:
+     path: /etc/mongod.conf
+     regexp: '127.0.0.1'
+     replace: '0.0.0.0'
+    register: mongo_conf
+
   - name: Start the mongo service
     service:
      name: mongod
@@ -19,9 +26,4 @@
      enabled: true
     when: mongo_conf.changed
 
-  - name: Update  IP address
-    ansible.builtin.replace:
-     path: /etc/mongod.conf
-     regexp: '127.0.0.1'
-     replace: '0.0.0.0'
-    register: mongo_conf
+ 
