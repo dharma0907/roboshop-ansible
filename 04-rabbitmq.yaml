@@ -18,14 +18,14 @@
      state: started
      enabled: true
 
-  - name: creating a user and password ofr rabbitmq
+  - name: creating a user and password forrabbitmq
     community.rabbitmq.rabbitmq_user:
-     user: roboshop
-     password: roboshop123
-     permissions:
-      - vhost: /
-        configure_priv: .*
-        read_priv: .*
-        write_priv: .*
-    state: present
+      user: roboshop
+      password: roboshop123
+      permissions:
+       - vhost: /
+         configure_priv: .*
+         read_priv: .*
+         write_priv: .*
+      state: present
  
