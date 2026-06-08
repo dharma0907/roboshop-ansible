@@ -1,55 +1,50 @@
-- name: roboshop instances management 
+- name: roboshop instances management
   hosts: local
   connection: local
-  gather_facts: no
   vars:
-    instances: [ "mongo", "redis", "mysql", "rabbitmq" , "frontend" ]
+    instances: ["mongodb", "redis", "mysql", "rabbitmq", "catalogue", "user", "cart", "shipping", "payment", "frontend"]
     image_id: ami-0220d79f3f480ecf5
-    domain_name: dcinema.online
+    domain_name: daws90s.shop # replace with your domain
     action: create
-
   tasks:
   - name: create ec2 instances
     amazon.aws.ec2_instance:
       instance_type: t3.micro
       name: "roboshop-{{ item }}"
       image_id: "{{ image_id }}"
-      # security groups, we have multiple to add
-      security_groups: 
-      - "roboshop-common"
+      security_groups:
       - "roboshop-{{ item }}"
+      - roboshop-common
     loop: "{{ instances }}"
     register: ec2_output
     when: action == "create"
-  
-  # - name: print the output
+
+  # - name: print output
   #   debug:
   #     msg: "{{ ec2_output }}"
 
-  # - name: create route 53 record
+  # - name: create route53 record
   #   debug:
-  #     msg: "Instance name: {{  item.item }} and Private IP: {{ item.instances[0].private_ip_address }}"
+  #     msg: "Instance Name: {{ item.item }} PrivateIP: {{ item.instances[0].private_ip_address }}"
   #   loop: "{{ ec2_output.results }}"
-  # here we are creating A record for all the instance using loop and private ip address
-  - name: create route 53 record
+
+  - name: create r53 records
     amazon.aws.route53:
       state: present
       zone: "{{ domain_name }}"
-      record: "{{ item.item }}.{{ domain_name }}" #mongo.dcimea.online
+      record: "{{ item.item }}.{{ domain_name }}" #mongodb.daws90s.shop
       type: A
       ttl: 1
       value: "{{ item.instances[0].private_ip_address }}"
       overwrite: true
     loop: "{{ ec2_output.results }}"
-    when: 
-    - item.item != "frontend"
-    - action == "create"
-  
-  - name: create route 53 record for frontend
+    when: action == "create"
+    
+  - name: create r53 record for frontend
     amazon.aws.route53:
       state: present
       zone: "{{ domain_name }}"
-      record: "{{ domain_name }}" #dcimea.online
+      record: "{{ domain_name }}" #daws90s.shop
       type: A
       ttl: 1
       value: "{{ item.instances[0].public_ip_address }}"
@@ -59,8 +54,6 @@
     - item.item == "frontend" 
     - action == "create"
 
-
-  # delete the route53 records
   - name: delete r53 records
     amazon.aws.route53:
       state: absent
@@ -69,23 +62,20 @@
       ttl: 1
       type: A
     loop: "{{ instances  }}"  
-    when: 
-    - action == "delete"
-    - item.item != "frontend"
+    when: action == "delete"
 
-  # delete the route53 records for frontend
-  - name: delete route 53 records
+  - name: delete r53 record for frontend
     amazon.aws.route53:
-     state: absent
-     record: "{{ domain_name }}" # to delete frontend which is publicip
-     ttl: 1
-     type: A
-     zone: "{{ domain_name }}"
-    loop: "{{ instances }}" 
+      state: absent
+      zone: "{{ domain_name }}"
+      record: "{{ domain_name }}" # daws90s.shop
+      ttl: 1
+      type: A
+    loop: "{{ instances  }}"  
     when: 
     - action == "delete"
     - item == "frontend"
-
+  
   - name: delete ec2 instances
     amazon.aws.ec2_instance:
       state: absent
