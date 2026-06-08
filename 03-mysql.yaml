@@ -1,0 +1,16 @@
+- name: Redis server setup
+  hosts: mysql
+  become: true
+  tasks:
+  - name: Install redis
+    command: dnf install mysql-server -y
+  
+  - name: start the service
+    service:
+     name: mysqld
+     state: started
+     enabled: true
+  
+  - name: setup root password
+    command: mysql_secure_installation --set-root-pass RoboShop@1
+    
