@@ -55,7 +55,12 @@
   - name: Install Mysql
     package:
      name: mysql
-     state: present  
+     state: present
+
+   - name: install python dependencies
+     pip:
+      name: PyMySQL
+      executable: pip3.9
 
   - name: Import SQL dump into MySQL database
     community.mysql.mysql_db:
