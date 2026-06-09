@@ -57,8 +57,8 @@
      name: mysql
      state: present
 
-   - name: install python dependencies
-     pip:
+  - name: install python dependencies
+    pip:
       name: PyMySQL
       executable: pip3.9
 
